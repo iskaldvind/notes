@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="titles">
+        <item>01. Hello</item>
+        <item>02. About</item>
+        <item>03. Bye</item>
+    </string-array>
+
+    <string-array name="descriptions">
+        <item>Hello!\nThis is almost brilliant Notes app.</item>
+        <item>OMG! This app can store notes! But wait!\nIt also can show them!!!</item>
+        <item>Goodbye. Hope you will invest $$$.</item>
+    </string-array>
+
+    <string-array name="dates">
+        <item>03/14/2021</item>
+        <item>03/15/2021</item>
+        <item>03/16/2021</item>
+    </string-array>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="note_heading_margin_sides">12dp</dimen>
+    <dimen name="note_body_margin_top">12dp</dimen>
+    <dimen name="note_text_size_normal">24sp</dimen>
+    <dimen name="note_text_size_small">16sp</dimen>
+</resources>
