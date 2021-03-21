@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".views.NoteFragment">
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/note_header_container"
+        style="@style/note_header_layout">
+
+        <TextView
+            android:id="@+id/note_title"
+            style="@style/note_title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/note_date"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/note_date"
+            style="@style/note_date"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/note_title"
+            app:layout_constraintEnd_toStartOf="@id/note_menu_button"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        
+        <ImageView
+            android:id="@+id/note_menu_button"
+            style="@style/note_action_image"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/note_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="ContentDescription" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/note_body_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <ImageView
+            android:id="@+id/note_image"
+            style="@style/note_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/note_link"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="ContentDescription" />
+        
+        <TextView
+            android:id="@+id/note_link"
+            style="@style/note_link"
+            app:layout_constraintStart_toEndOf="@id/note_image"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    
+    <TextView
+        android:id="@+id/note_description"
+        style="@style/note_description"/>
+</LinearLayout>
