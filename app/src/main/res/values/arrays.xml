@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="titles">
-        <item>01. Hello</item>
-        <item>02. About</item>
-        <item>03. Bye</item>
+        <item>Hello</item>
+        <item>About</item>
+        <item>Bye</item>
     </string-array>
 
     <string-array name="descriptions">
