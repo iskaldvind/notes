@@ -1,34 +1,28 @@
 package io.iskaldvind.notes.views;
-
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.HashMap;
 import java.util.Objects;
-
 import io.iskaldvind.notes.R;
 import io.iskaldvind.notes.models.Note;
 
 public class NoteFragment extends Fragment {
 
     static final String KEY_NOTE_ID = "NoteFragment.note_id";
-    private int mIndex = 0;
+    private Note note;
     
     public NoteFragment() {}
     
-    NoteFragment(int index) {
-        mIndex = index;
+    NoteFragment(Note note) {
+        this.note = note;
     }
 
     @Override
@@ -45,9 +39,7 @@ public class NoteFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        HashMap<Integer, Note> notes = ((MainActivity) Objects.requireNonNull(getActivity())).notes;
-        Note note = notes.get(mIndex);
-        TextView title = view.findViewById(R.id.title);
+        TextView title = view.findViewById(R.id.note_title);
         assert note != null;
         title.setText(note.getTitle());
         TextView date = view.findViewById(R.id.note_date);
@@ -58,7 +50,7 @@ public class NoteFragment extends Fragment {
         String imageUrl = note.getPhoto();
         if (imageUrl != null) {
             noteImage.setVisibility(View.VISIBLE);
-            ((MainActivity) getActivity()).imageLoader.displayImage(imageUrl, noteImage);
+            ((MainActivity) Objects.requireNonNull(getActivity())).imageLoader.displayImage(imageUrl, noteImage);
         } else {
             noteImage.setVisibility(View.GONE);
         }
@@ -72,7 +64,7 @@ public class NoteFragment extends Fragment {
         }
         ImageView settingsButton = view.findViewById(R.id.note_menu_button);
         settingsButton.setOnClickListener((view1 -> {
-            PopupMenu popupMenu = new PopupMenu(getActivity(), settingsButton);
+            PopupMenu popupMenu = new PopupMenu(requireActivity(), settingsButton);
             popupMenu.getMenuInflater().inflate(R.menu.button_menu, popupMenu.getMenu());
             
             popupMenu.setOnMenuItemClickListener(item -> { 

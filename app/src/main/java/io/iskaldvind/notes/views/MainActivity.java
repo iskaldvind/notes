@@ -7,22 +7,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.material.navigation.NavigationView;
-
-import java.util.HashMap;
-import java.util.Objects;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.iskaldvind.notes.R;
 import io.iskaldvind.notes.models.Note;
@@ -30,7 +23,6 @@ import io.iskaldvind.notes.utils.ImageLoader;
 
 public class MainActivity extends AppCompatActivity {
     
-    public HashMap<Integer, Note> notes = new HashMap<>();
     public int lastNoteIndex = 0;
     public boolean settingOption1 = false;
     public ImageLoader imageLoader;
@@ -47,10 +39,6 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             lastNoteIndex = savedInstanceState.getInt(NoteFragment.KEY_NOTE_ID, 0);
             settingOption1 = savedInstanceState.getBoolean(AccountFragment.KEY_OPTION_1, false);
-            //noinspection unchecked
-            notes = (HashMap<Integer, Note>) savedInstanceState.getSerializable(NotesListFragment.KEY_NOTES);
-        } else {
-            loadNotes();
         }
         showNotes();
     }
@@ -99,39 +87,30 @@ public class MainActivity extends AppCompatActivity {
         userName.setText(getString(R.string.user_name));
     }
     
-    private void loadNotes() {
-        String[] titles = getResources().getStringArray(R.array.titles);
-        String[] descriptions = getResources().getStringArray(R.array.descriptions);
-        String[] dates = getResources().getStringArray(R.array.dates);
-        for (int i = 0; i < titles.length; i++) notes.put(i, new Note(titles[i], descriptions[i], dates[i]));
-        Objects.requireNonNull(notes.get(0)).setPhoto(getString(R.string.hello_photo_url));
-        Objects.requireNonNull(notes.get(0)).setUrl(getString(R.string.hello_ling_url));
-    }
-
     public void showNotes() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.replace(R.id.main_container, new NotesListFragment(notes, lastNoteIndex));
+        fragmentTransaction.replace(R.id.main_container, new NotesListFragment(lastNoteIndex));
         fragmentTransaction.commit();
     }
     
-    void showNotePortrait(int index) {
+    void showNotePortrait(Note note) {
         showList(false);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.replace(R.id.main_container, new NoteFragment(index));
+        fragmentTransaction.replace(R.id.main_container, new NoteFragment(note));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
-    void showNoteLandscape(int index) {
+    void showNoteLandscape(Note note) {
         showList(true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.replace(R.id.side_container, new NoteFragment(index));
+        fragmentTransaction.replace(R.id.side_container, new NoteFragment(note));
         fragmentTransaction.commit();
     }
     
@@ -157,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putInt(NoteFragment.KEY_NOTE_ID, lastNoteIndex);
         outState.putBoolean(AccountFragment.KEY_OPTION_1, settingOption1);
-        outState.putSerializable(NotesListFragment.KEY_NOTES, notes);
     }
 
     @Override
