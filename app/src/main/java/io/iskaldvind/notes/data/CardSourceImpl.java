@@ -1,6 +1,9 @@
 package io.iskaldvind.notes.data;
 
 import android.content.res.Resources;
+
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import io.iskaldvind.notes.R;
@@ -33,10 +36,29 @@ public class CardSourceImpl implements CardSource {
     
     
     public Note getNote(int position) {
-        return dataSource.get(position);
+        if (dataSource.size() > 0) {
+            return dataSource.get(position);
+        } else {
+            return null;
+        }
     }
 
     public int size(){
         return dataSource.size();
+    }
+
+    @Override
+    public void add(@NonNull Note note) {
+        dataSource.add(note);
+    }
+
+    @Override
+    public void edit(int position, @NonNull Note note) {
+        dataSource.set(position, note);
+    }
+
+    @Override
+    public void remove(int position) {
+        dataSource.remove(position);
     }
 }

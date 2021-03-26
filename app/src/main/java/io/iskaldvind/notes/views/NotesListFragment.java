@@ -15,7 +15,6 @@ import java.util.Objects;
 import io.iskaldvind.notes.R;
 import io.iskaldvind.notes.data.CardSource;
 import io.iskaldvind.notes.data.CardSourceImpl;
-import io.iskaldvind.notes.models.Note;
 import io.iskaldvind.notes.ui.NotesListAdapter;
 
 public class NotesListFragment extends Fragment {
@@ -45,11 +44,7 @@ public class NotesListFragment extends Fragment {
         } else {
             mCurrentNoteId = ((MainActivity) Objects.requireNonNull(getActivity())).lastNoteIndex;
         }
-        Note note = new CardSourceImpl(requireActivity().getResources()).init().getNote(mCurrentNoteId);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && note != null) {
-            ((MainActivity) Objects.requireNonNull(getActivity())).showNoteLandscape(note);
-        }
-        CardSource data = new CardSourceImpl(getResources()).init();
+        CardSourceImpl data = ((MainActivity) Objects.requireNonNull(getActivity())).notes;
         initRecyclerView(mRecyclerView, data);
     }
 
@@ -66,12 +61,14 @@ public class NotesListFragment extends Fragment {
             mCurrentNoteId = position;
             ((MainActivity) Objects.requireNonNull(getActivity())).lastNoteIndex = position;
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    ((MainActivity) Objects.requireNonNull(getActivity())).showNotePortrait(data.getNote(mCurrentNoteId));
+                    ((MainActivity) Objects.requireNonNull(getActivity())).showNotePortrait(mCurrentNoteId, adapter);
                 } else {
-                    ((MainActivity) Objects.requireNonNull(getActivity())).showNoteLandscape(data.getNote(mCurrentNoteId));
+                    ((MainActivity) Objects.requireNonNull(getActivity())).showNoteLandscape(mCurrentNoteId, adapter);
                 }
         });
-
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            ((MainActivity) Objects.requireNonNull(getActivity())).showNoteLandscape(mCurrentNoteId, adapter);
+        }
     }
     
     @Override

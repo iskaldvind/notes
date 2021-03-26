@@ -18,7 +18,9 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.iskaldvind.notes.R;
+import io.iskaldvind.notes.data.CardSourceImpl;
 import io.iskaldvind.notes.models.Note;
+import io.iskaldvind.notes.ui.NotesListAdapter;
 import io.iskaldvind.notes.utils.ImageLoader;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     public int lastNoteIndex = 0;
     public boolean settingOption1 = false;
     public ImageLoader imageLoader;
+    public CardSourceImpl notes;
    
     
     @Override
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         imageLoader = ImageLoader.getInstance(this);
         Toolbar toolbar = initToolbar();
+        notes = new CardSourceImpl(getResources()).init();
         initDrawer(toolbar);
         
         if (savedInstanceState != null) {
@@ -69,11 +73,13 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
                 case R.id.create: {
-                    Toast.makeText(MainActivity.this, "Notes creation is not implemented yet", Toast.LENGTH_SHORT).show();
+                    showNoteEdit(null, notes.size(), null);
+                    drawer.closeDrawers();
                     return true;
                 }
                 case R.id.about: {
-                    Toast.makeText(MainActivity.this, "About is not implemented yet", Toast.LENGTH_SHORT).show();
+                    showAbout();
+                    drawer.closeDrawers();
                     return true;
                 }
                 default: return false;
@@ -95,22 +101,32 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
     
-    void showNotePortrait(Note note) {
+    void showNotePortrait(int index, NotesListAdapter adapter) {
         showList(false);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.replace(R.id.main_container, new NoteFragment(note));
+        fragmentTransaction.replace(R.id.main_container, new NoteFragment(index, adapter));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
-    void showNoteLandscape(Note note) {
+    void showNoteLandscape(int index, NotesListAdapter adapter) {
         showList(true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.replace(R.id.side_container, new NoteFragment(note));
+        fragmentTransaction.replace(R.id.side_container, new NoteFragment(index, adapter));
+        fragmentTransaction.commit();
+    }
+
+    void showNoteEdit(Note note, int index, NotesListAdapter adapter) {
+        showList(false);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.replace(R.id.main_container, new NoteEditFragment(note, index, adapter));
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
     
@@ -120,6 +136,15 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.replace(R.id.main_container, new AccountFragment());
+        fragmentTransaction.commit();
+    }
+
+    void showAbout() {
+        showList(false);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.replace(R.id.main_container, new AboutFragment());
         fragmentTransaction.commit();
     }
     
