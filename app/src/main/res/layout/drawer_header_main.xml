@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/drawer_header_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/drawer_header_layout">
+    
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/drawer_header_avatar"
+        style="@style/drawer_header_avatar"/>
+    
+    <TextView
+        android:id="@+id/drawer_header_name"
+        style="@style/drawer_header_name"/>
+</LinearLayout>
