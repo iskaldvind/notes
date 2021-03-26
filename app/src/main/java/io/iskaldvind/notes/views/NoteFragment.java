@@ -11,20 +11,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import io.iskaldvind.notes.R;
-import io.iskaldvind.notes.data.CardSourceImpl;
-import io.iskaldvind.notes.models.Note;
-import io.iskaldvind.notes.ui.NotesListAdapter;
+import io.iskaldvind.notes.data.CardDataSourceFirebaseImpl;
+import io.iskaldvind.notes.models.CardData;
+import io.iskaldvind.notes.ui.ViewHolderAdapter;
 
 public class NoteFragment extends Fragment {
 
     static final String KEY_NOTE_ID = "NoteFragment.note_id";
-    private NotesListAdapter adapter;
+    private ViewHolderAdapter adapter;
     private int index;
-    private CardSourceImpl data;
+    private CardDataSourceFirebaseImpl data;
     
     public NoteFragment() {}
     
-    NoteFragment(int index, NotesListAdapter adapter) {
+    NoteFragment(int index, ViewHolderAdapter adapter) {
         this.index = index;
         this.adapter = adapter;
     }
@@ -45,29 +45,21 @@ public class NoteFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         data = ((MainActivity) requireActivity()).notes;
         TextView title = view.findViewById(R.id.note_title);
-        Note note = data.getNote(index);
-        if (note != null) {
-            title.setText(note.getTitle());
+        CardData cardData = data.getItemAt(index);
+        if (cardData != null) {
+            title.setText(cardData.getTitle());
             TextView date = view.findViewById(R.id.note_date);
-            date.setText(note.getDate());
+            date.setText(cardData.getDate());
             TextView description = view.findViewById(R.id.note_description);
-            description.setText(note.getDescription());
+            description.setText(cardData.getDescription());
             ImageView noteImage = view.findViewById(R.id.note_image);
-            String imageUrl = note.getPhoto();
-            if (imageUrl != null) {
-                noteImage.setVisibility(View.VISIBLE);
-                ((MainActivity) requireActivity()).imageLoader.displayImage(imageUrl, noteImage);
-            } else {
-                noteImage.setVisibility(View.GONE);
-            }
+            String imageUrl = cardData.getPhoto();
+            noteImage.setVisibility(View.VISIBLE);
+            ((MainActivity) requireActivity()).imageLoader.displayImage(imageUrl, noteImage);
             TextView noteUrl = view.findViewById(R.id.note_link);
-            String url = note.getUrl();
-            if (url != null) {
-                noteUrl.setVisibility(View.VISIBLE);
-                noteUrl.setText(url);
-            } else {
-                noteUrl.setVisibility(View.GONE);
-            }
+            String url = cardData.getUrl();
+            noteUrl.setVisibility(View.VISIBLE);
+            noteUrl.setText(url);
             ImageView settingsButton = view.findViewById(R.id.note_menu_button);
             settingsButton.setOnClickListener((view1 -> {
                 PopupMenu popupMenu = new PopupMenu(requireActivity(), settingsButton);
@@ -76,7 +68,7 @@ public class NoteFragment extends Fragment {
                 popupMenu.setOnMenuItemClickListener(item -> {
                     switch (item.getItemId()) {
                         case R.id.edit: {
-                            ((MainActivity) requireActivity()).showNoteEdit(note, index, adapter);
+                            ((MainActivity) requireActivity()).showNoteEdit(index, false);
                             return true;
                         }
                         case R.id.delete: {

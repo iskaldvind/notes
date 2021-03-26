@@ -18,9 +18,8 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.iskaldvind.notes.R;
-import io.iskaldvind.notes.data.CardSourceImpl;
-import io.iskaldvind.notes.models.Note;
-import io.iskaldvind.notes.ui.NotesListAdapter;
+import io.iskaldvind.notes.data.CardDataSourceFirebaseImpl;
+import io.iskaldvind.notes.ui.ViewHolderAdapter;
 import io.iskaldvind.notes.utils.ImageLoader;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     public int lastNoteIndex = 0;
     public boolean settingOption1 = false;
     public ImageLoader imageLoader;
-    public CardSourceImpl notes;
+    public CardDataSourceFirebaseImpl notes;
    
     
     @Override
@@ -37,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         imageLoader = ImageLoader.getInstance(this);
         Toolbar toolbar = initToolbar();
-        notes = new CardSourceImpl(getResources()).init();
+        notes = CardDataSourceFirebaseImpl.getInstance();
+        
         initDrawer(toolbar);
         
         if (savedInstanceState != null) {
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
                 case R.id.create: {
-                    showNoteEdit(null, notes.size(), null);
+                    showNoteEdit(lastNoteIndex, true);
                     drawer.closeDrawers();
                     return true;
                 }
@@ -97,11 +97,11 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.replace(R.id.main_container, new NotesListFragment(lastNoteIndex));
+        fragmentTransaction.replace(R.id.main_container, new NotesListFragment());
         fragmentTransaction.commit();
     }
     
-    void showNotePortrait(int index, NotesListAdapter adapter) {
+    void showNotePortrait(int index, ViewHolderAdapter adapter) {
         showList(false);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    void showNoteLandscape(int index, NotesListAdapter adapter) {
+    void showNoteLandscape(int index, ViewHolderAdapter adapter) {
         showList(true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -120,12 +120,12 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    void showNoteEdit(Note note, int index, NotesListAdapter adapter) {
+    void showNoteEdit(int index, boolean isNew) {
         showList(false);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.replace(R.id.main_container, new NoteEditFragment(note, index, adapter));
+        fragmentTransaction.replace(R.id.main_container, NoteEditFragment.newInstance(index, isNew));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
