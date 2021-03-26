@@ -1,11 +1,137 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
+         
     </style>
 
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light">
+
+    </style>
+
+    <!-- DRAWER -->
+    
+    <style name="drawer_header_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/drawer_header_height</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:background">@color/colorAccent</item>
+    </style>
+    
+    <style name="drawer_header_avatar">
+        <item name="android:layout_height">@dimen/avatar_size</item>
+        <item name="android:layout_width">@dimen/avatar_size</item>
+        <item name="android:layout_marginStart">@dimen/drawer_header_left_margin</item>
+    </style>
+        
+    <style name="drawer_header_name">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/drawer_header_left_margin</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_size_big</item>
+    </style>
+    
+    <!-- NOTE -->
+    <style name="note_header_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">@color/colorPrimaryLight</item>
+    </style>
+        
+    <style name="note_title">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_margin">@dimen/note_heading_margin</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="note_date">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_margin">@dimen/note_heading_margin</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/shadowed</item>
+        <item name="android:textStyle">normal</item> 
+    </style>
+    
+    <style name="note_action_image">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:src">@drawable/ic_settings_black_24dp</item>
+        <item name="android:tint">@color/colorPrimaryDark</item>
+        <item name="android:layout_marginEnd">@dimen/note_action_margin_end</item>
+    </style>
+    
+    <style name="note_avatar">
+        <item name="android:layout_height">@dimen/avatar_size</item>
+        <item name="android:layout_width">@dimen/avatar_size</item>
+        <item name="android:layout_margin">@dimen/note_heading_margin</item>
+    </style>
+    
+    <style name="note_link">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_margin">@dimen/note_heading_margin</item>
+    </style>
+
+    <style name="note_description">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">@dimen/note_body_margin_top</item>
+        <item name="android:layout_marginStart">@dimen/note_heading_margin</item>
+        <item name="android:layout_marginEnd">@dimen/note_heading_margin</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/dark</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    
+    <!-- ACCOUNT -->
+
+    <style name="account_avatar">
+        <item name="android:layout_height">@dimen/avatar_size</item>
+        <item name="android:layout_width">@dimen/avatar_size</item>
+        <item name="android:layout_margin">@dimen/note_heading_margin</item>
+    </style>
+
+    <style name="account_name">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_margin">@dimen/note_heading_margin</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="account_settings_label">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_margin">@dimen/note_heading_margin</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/dark</item>
+    </style>
+
+    <style name="account_setting_label">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_margin">@dimen/note_heading_margin</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textColor">@color/dark</item>
+    </style>
+    
 </resources>
