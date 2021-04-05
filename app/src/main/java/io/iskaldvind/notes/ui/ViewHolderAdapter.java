@@ -35,10 +35,7 @@ public class ViewHolderAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = mInflater.inflate(R.layout.note_list_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(v);
-        android.util.Log.e(NotesListFragment.class.getCanonicalName(),
-                String.format(Locale.getDefault(), "created holder id=%d", viewHolder.id));
-        return viewHolder;
+        return new ViewHolder(v);
     }
 
     @Override
@@ -50,16 +47,12 @@ public class ViewHolderAdapter extends RecyclerView.Adapter<ViewHolder> {
                 mOnClickListener.onItemClick(v, position);
             }
         });
-        android.util.Log.e(NotesListFragment.class.getCanonicalName(),
-                String.format(Locale.getDefault(), "used holder id=%d", holder.id));
     }
 
     @Override
     public void onViewRecycled(@NonNull ViewHolder holder) {
         super.onViewRecycled(holder);
         holder.clear(mFragment);
-        android.util.Log.e(NotesListFragment.class.getCanonicalName(),
-                String.format(Locale.getDefault(), "recycled holder id=%d", holder.id));
     }
 
     @Override

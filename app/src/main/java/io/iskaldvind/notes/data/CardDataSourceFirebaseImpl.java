@@ -64,19 +64,15 @@ public class CardDataSourceFirebaseImpl extends BaseCardDataSource {
     @Override
     public void add(@NonNull CardData data) {
         final CardDataFromFirestore cardData;
-        Log.d("ADD", data + "");
         if (data instanceof CardDataFromFirestore) {
-            Log.d("ADD", "TRUE");
             cardData = (CardDataFromFirestore) data;
         } else {
-            Log.d("ADD", "FALSE");
             cardData = new CardDataFromFirestore(data);
         }
         mCollection.add(cardData.getFields()).addOnSuccessListener(documentReference -> {
             
             cardData.setId(documentReference.getId());
             super.add(cardData);
-            Log.d("ADD", "NEW " + mData);
         });
     }
 
@@ -101,4 +97,8 @@ public class CardDataSourceFirebaseImpl extends BaseCardDataSource {
         }
         super.clear();
     }
-}
+    
+    public int getSize() {
+        return mData.size();
+    }
+} 

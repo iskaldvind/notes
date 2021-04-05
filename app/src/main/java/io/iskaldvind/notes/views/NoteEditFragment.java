@@ -2,9 +2,7 @@ package io.iskaldvind.notes.views;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +14,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.Date;
 
 import io.iskaldvind.notes.R;
-import io.iskaldvind.notes.data.CardDataSource;
 import io.iskaldvind.notes.data.CardDataSourceFirebaseImpl;
-import io.iskaldvind.notes.data.CardDataSourceImpl;
 import io.iskaldvind.notes.models.CardData;
 
 
@@ -28,6 +24,7 @@ public class NoteEditFragment extends Fragment {
 
     private int mCurrentItemIdx = -1;
     private boolean mIsNew = false;
+    private MainActivity parent;
 
     public NoteEditFragment() {
         // Required empty public constructor
@@ -45,6 +42,7 @@ public class NoteEditFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        parent = (MainActivity) requireActivity();
         if (getArguments() != null) {
             mCurrentItemIdx = getArguments().getInt(ARG_ITEM_IDX, -1);
             mIsNew = getArguments().getBoolean(ARG_IS_NEW, false);
@@ -83,14 +81,16 @@ public class NoteEditFragment extends Fragment {
             cardData.setUrl(editUrl.getText().toString());
             cardData.setTitle(editTitle.getText().toString());
             cardData.setDescription(editDescription.getText().toString());
-            Log.d("EDIT", cardData.toString());
             if (mIsNew) {
                 dataSource.add(cardData);
+                getFragmentManager().popBackStack();
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    getFragmentManager().popBackStack();
+                }
             } else {
                 dataSource.update(cardData);
+                getFragmentManager().popBackStack();
             }
-            assert getFragmentManager() != null;
-            getFragmentManager().popBackStack();
         });
 
         final MaterialButton btnCancel = view.findViewById(R.id.note_edit_cancel);

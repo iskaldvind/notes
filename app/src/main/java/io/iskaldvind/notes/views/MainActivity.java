@@ -7,20 +7,27 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.material.navigation.NavigationView;
 import de.hdodenhof.circleimageview.CircleImageView;
+
 import io.iskaldvind.notes.R;
 import io.iskaldvind.notes.data.CardDataSourceFirebaseImpl;
-import io.iskaldvind.notes.ui.ViewHolderAdapter;
+import io.iskaldvind.notes.ui.OnDeleteNoteDialogListener;
 import io.iskaldvind.notes.utils.ImageLoader;
+
+
 
 public class MainActivity extends AppCompatActivity {
     
@@ -28,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean settingOption1 = false;
     public ImageLoader imageLoader;
     public CardDataSourceFirebaseImpl notes;
-   
+    public OnDeleteNoteDialogListener onDeleteNoteDialogListener;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +44,12 @@ public class MainActivity extends AppCompatActivity {
         imageLoader = ImageLoader.getInstance(this);
         Toolbar toolbar = initToolbar();
         notes = CardDataSourceFirebaseImpl.getInstance();
-        
-        initDrawer(toolbar);
-        
+        setDeleteDialogListener();
         if (savedInstanceState != null) {
             lastNoteIndex = savedInstanceState.getInt(NoteFragment.KEY_NOTE_ID, 0);
             settingOption1 = savedInstanceState.getBoolean(AccountFragment.KEY_OPTION_1, false);
         }
+        initDrawer(toolbar);
         showNotes();
     }
     
@@ -53,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         return toolbar;
     }
     
+    @SuppressLint("NonConstantResourceId")
     private void initDrawer(Toolbar toolbar) {
         final DrawerLayout drawer = findViewById(R.id.main_root);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -101,22 +108,22 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
     
-    void showNotePortrait(int index, ViewHolderAdapter adapter) {
+    void showNotePortrait() {
         showList(false);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.replace(R.id.main_container, new NoteFragment(index, adapter));
+        fragmentTransaction.replace(R.id.main_container, new NoteFragment());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
-    void showNoteLandscape(int index, ViewHolderAdapter adapter) {
+    void showNoteLandscape() {
         showList(true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.replace(R.id.side_container, new NoteFragment(index, adapter));
+        fragmentTransaction.replace(R.id.side_container, new NoteFragment());
         fragmentTransaction.commit();
     }
 
@@ -170,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
     }
     
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -185,5 +193,35 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         }
+    }
+    
+    public void showDeleteDialog() {
+        DialogFragment dialogFragment = new DialogFragment();
+        dialogFragment.show(getSupportFragmentManager(), "dialog_fragment");
+    }
+    
+    private void setDeleteDialogListener() {
+        onDeleteNoteDialogListener = new OnDeleteNoteDialogListener() {
+            @Override
+            public void onDialogPositive() {
+                notes.remove(lastNoteIndex);
+                FrameLayout noteLayout = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 
+                        findViewById(R.id.side_container) : findViewById(R.id.main_container);
+                int notesLeft = notes.getSize() - 1;
+                if (notesLeft == 0) {
+                    noteLayout.removeAllViews();
+                } else {
+                    if (notesLeft == lastNoteIndex) lastNoteIndex --;
+                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                        showNoteLandscape();
+                    } else {
+                        showNotes();
+                    }
+                }
+            }
+
+            @Override
+            public void onDialogNegative() { }
+        };
     }
 }

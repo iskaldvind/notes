@@ -1,10 +1,12 @@
 package io.iskaldvind.notes.views;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,25 +15,21 @@ import android.widget.TextView;
 import io.iskaldvind.notes.R;
 import io.iskaldvind.notes.data.CardDataSourceFirebaseImpl;
 import io.iskaldvind.notes.models.CardData;
-import io.iskaldvind.notes.ui.ViewHolderAdapter;
+
+
 
 public class NoteFragment extends Fragment {
 
     static final String KEY_NOTE_ID = "NoteFragment.note_id";
-    private ViewHolderAdapter adapter;
-    private int index;
-    private CardDataSourceFirebaseImpl data;
+    private int mIndex;
+    private MainActivity parent;
     
     public NoteFragment() {}
     
-    NoteFragment(int index, ViewHolderAdapter adapter) {
-        this.index = index;
-        this.adapter = adapter;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        parent = (MainActivity) requireActivity();
     }
 
     @Override
@@ -40,12 +38,14 @@ public class NoteFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_note, container, false);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        data = ((MainActivity) requireActivity()).notes;
+        CardDataSourceFirebaseImpl data = parent.notes;
+        mIndex = parent.lastNoteIndex;
         TextView title = view.findViewById(R.id.note_title);
-        CardData cardData = data.getItemAt(index);
+        CardData cardData = data.getItemAt(mIndex);
         if (cardData != null) {
             title.setText(cardData.getTitle());
             TextView date = view.findViewById(R.id.note_date);
@@ -68,13 +68,11 @@ public class NoteFragment extends Fragment {
                 popupMenu.setOnMenuItemClickListener(item -> {
                     switch (item.getItemId()) {
                         case R.id.edit: {
-                            ((MainActivity) requireActivity()).showNoteEdit(index, false);
+                            parent.showNoteEdit(mIndex, false);
                             return true;
                         }
                         case R.id.delete: {
-                            data.remove(index);
-                            adapter.notifyDataSetChanged();
-                            ((MainActivity) requireActivity()).showNotes();
+                            parent.showDeleteDialog();
                             return true;
                         }
                         default: {

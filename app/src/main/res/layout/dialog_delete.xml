@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/delete_dialog_root"
+    android:orientation="vertical" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.DialogFragment">
+    
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:text="@string/dialog_delete_question"
+        android:textAlignment="center" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dialog_delete_yes_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dialog_button_margin"
+            android:textColor="@color/colorDanger"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="@string/dialog_delete_positive" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dialog_delete_no_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dialog_button_margin"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="@string/dialog_delete_negative" />
+    </LinearLayout>
+</LinearLayout>
+

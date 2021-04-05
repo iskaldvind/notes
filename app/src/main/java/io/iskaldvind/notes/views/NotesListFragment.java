@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -15,14 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
-import java.util.Locale;
 
 import io.iskaldvind.notes.R;
 import io.iskaldvind.notes.data.CardDataSource;
@@ -31,39 +28,40 @@ import io.iskaldvind.notes.ui.ViewHolderAdapter;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class NotesListFragment extends Fragment {
-    private static final String ARG_NOTE_IDX = "NotesListFragment.arg_note_idx";
+    public static final String ARG_NOTE_IDX = "NotesListFragment.arg_note_idx";
     private int mCurrentIdx = -1;
     private int mLastSelectedPosition = -1;
     private CardDataSource mCardDataSource;
-    private ViewHolderAdapter mViewHolderAdapter;
+    private ViewHolderAdapter viewHolderAdapter;
     private RecyclerView mRecyclerView;
+    private MainActivity parent;
 
-    private CardDataSource.CardDataSourceListener mListener = new CardDataSource.CardDataSourceListener() {
+    private final CardDataSource.CardDataSourceListener mListener = new CardDataSource.CardDataSourceListener() {
         @Override
         public void onItemAdded(int idx) {
-            if (mViewHolderAdapter != null) {
-                mViewHolderAdapter.notifyItemInserted(idx);
+            if (viewHolderAdapter != null) {
+                viewHolderAdapter.notifyItemInserted(idx);
             }
         }
 
         @Override
         public void onItemRemoved(int idx) {
-            if (mViewHolderAdapter != null) {
-                mViewHolderAdapter.notifyItemRemoved(idx);
+            if (viewHolderAdapter != null) {
+                viewHolderAdapter.notifyItemRemoved(idx);
             }
         }
 
         @Override
         public void onItemUpdated(int idx) {
-            if (mViewHolderAdapter != null) {
-                mViewHolderAdapter.notifyItemChanged(idx);
+            if (viewHolderAdapter != null) {
+                viewHolderAdapter.notifyItemChanged(idx);
             }
         }
 
         @Override
         public void onDataSetChanged() {
-            if (mViewHolderAdapter != null) {
-                mViewHolderAdapter.notifyDataSetChanged();
+            if (viewHolderAdapter != null) {
+                viewHolderAdapter.notifyDataSetChanged();
             }
         }
     };
@@ -75,6 +73,7 @@ public class NotesListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        parent = (MainActivity) requireActivity();
     }
 
     @Override
@@ -88,7 +87,7 @@ public class NotesListFragment extends Fragment {
 
         DividerItemDecoration decorator = new DividerItemDecoration(requireActivity(),
                 LinearLayoutManager.VERTICAL);
-        decorator.setDrawable(getResources().getDrawable(R.drawable.separator));
+        decorator.setDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.separator, null));
         mRecyclerView.addItemDecoration(decorator);
 
         DefaultItemAnimator itemAnimator = new DefaultItemAnimator();
@@ -100,17 +99,19 @@ public class NotesListFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
 
         mCardDataSource = CardDataSourceFirebaseImpl.getInstance();
-        mViewHolderAdapter = new ViewHolderAdapter(this, mCardDataSource);
+        viewHolderAdapter = new ViewHolderAdapter(this, mCardDataSource);
         mCardDataSource.addCardDataSourceListener(mListener);
-        mViewHolderAdapter.setOnClickListener((v, position) -> {
+        viewHolderAdapter.setOnClickListener((v, position) -> {
+            parent.lastNoteIndex = position;
+            mCurrentIdx = position;
             if (getResources().getConfiguration().orientation ==
                     Configuration.ORIENTATION_PORTRAIT) {
-                ((MainActivity) requireActivity()).showNotePortrait(position, mViewHolderAdapter);
+                parent.showNotePortrait();
             } else {
-                ((MainActivity) requireActivity()).showNoteLandscape(position, mViewHolderAdapter);
+                parent.showNoteLandscape();
             }
         });
-        mRecyclerView.setAdapter(mViewHolderAdapter);
+        mRecyclerView.setAdapter(viewHolderAdapter);
 
         return mRecyclerView;
     }
@@ -125,26 +126,14 @@ public class NotesListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle bundle) {
         super.onViewCreated(view, bundle);
 
-        if (bundle != null) {
-            mCurrentIdx = bundle.getInt(ARG_NOTE_IDX, -1);
-            if (mCurrentIdx != -1 &&
-                    getResources().getConfiguration().orientation ==
-                            Configuration.ORIENTATION_LANDSCAPE) {
-                ((MainActivity) requireActivity()).showNoteLandscape(mCurrentIdx, mViewHolderAdapter);
-            }
+        mCurrentIdx = bundle != null ? bundle.getInt(ARG_NOTE_IDX, -1) : parent.lastNoteIndex;
+        if (mCurrentIdx != -1 &&
+                getResources().getConfiguration().orientation ==
+                        Configuration.ORIENTATION_LANDSCAPE) {
+            parent.showNoteLandscape();
         }
     }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle bundle) {
-        super.onSaveInstanceState(bundle);
-
-        bundle.putInt(ARG_NOTE_IDX, mCurrentIdx);
-    }
-
-    private void setCurrentIdx(int idx) {
-        mCurrentIdx = idx;
-    }
+    
     
     @Override
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v,
@@ -168,7 +157,7 @@ public class NotesListFragment extends Fragment {
         } else if (item.getItemId() == R.id.delete) {
             if (mLastSelectedPosition != -1) {
                 mCardDataSource.remove(mLastSelectedPosition);
-                mViewHolderAdapter.notifyItemRemoved(mLastSelectedPosition);
+                viewHolderAdapter.notifyItemRemoved(mLastSelectedPosition);
             }
         } else {
             return super.onContextItemSelected(item);
