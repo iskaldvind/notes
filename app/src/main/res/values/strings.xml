@@ -1,3 +1,41 @@
 <resources>
     <string name="app_name">Notes</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="menu_search">Search</string>
+    <string name="menu_logout">Log out</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_delete">Delete</string>
+    <string name="menu_account">Account</string>
+    <string name="menu_notes">My notes</string>
+    <string name="menu_create">Create</string>
+    <string name="menu_about">About</string>
+
+    <string name="user_name">John Smith</string>
+    <string name="user_avatar_url">https://get.pxhere.com/photo/notebook-man-working-person-people-notepad-male-portrait-young-sitting-corporate-office-business-couch-write-startup-freelancer-freelance-author-casual-company-businessman-planing-entrepreneur-photo-shoot-start-up-764654.jpg</string>
+    <string name="hello_photo_url">https://get.pxhere.com/photo/black-and-white-skyline-photography-building-city-skyscraper-urban-new-york-cityscape-downtown-landmark-monochrome-tower-block-metropolis-neighbourhood-urban-area-monochrome-photography-residential-area-human-settlement-metropolitan-area-163.jpg</string>
+    <string name="hello_ling_url">https://google.com</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="account_settings">Settings</string>
+    <string name="account_setting_1">Setting option 1</string>
+
+    <string name="edit_photo">Photo url</string>
+    <string name="edit_url">Link url</string>
+    <string name="edit_title">* Title</string>
+    <string name="edit_description">* Description</string>
+    <string name="edit_date">Set date</string>
+    <string name="edit_bt_save">Save</string>
+    <string name="edit_bt_cancel">Cancel</string>
+
+    <string name="about">Notes App</string>
+
+    <string name="dialog_delete_question">Delete this note?</string>
+    <string name="dialog_delete_positive">Yes</string>
+    <string name="dialog_delete_negative">No</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
